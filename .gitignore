@@ -4,7 +4,4 @@ node_modules/
 # ignore dist folder
 dist/
 
-# ignore src folder
-src/
-
 .DS_Store

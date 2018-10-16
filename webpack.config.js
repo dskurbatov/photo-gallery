@@ -1,6 +1,6 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
 
 const extractSCSS = new ExtractTextPlugin('[name].[md5:contenthash:hex:20].css')
 
@@ -12,6 +12,12 @@ module.exports = {
     filename: '[name].[hash].js',
     path: __dirname + '/dist'
   },
+  devServer: {
+    contentBase: './dist',
+    //enable hot module reloading
+    hot: true,
+    open: true
+  },
   module: {
     rules: [
       {
@@ -20,10 +26,10 @@ module.exports = {
         use: ['babel-loader']
       },
       {
-        test: /\.scss$/,
+        test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: ['css-loader', 'sass-loader']
+          use: ['css-loader']
         })
       },
       {
@@ -37,19 +43,6 @@ module.exports = {
             }
           }
         ]
-      },
-      {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 1000000,
-              name: '[name].[hash].[ext]',
-              outputPath: 'assets/'
-            }
-          }
-        ]
       }
     ]
   },
@@ -57,10 +50,10 @@ module.exports = {
     extensions: ['.js', '.jsx', '.json']
   },
   plugins: [
-    new CleanWebpackPlugin(['dist']),
     extractSCSS,
     new HtmlWebpackPlugin({
-      title: 'Configuration for Webpack'
-    })
+      template: './src/index.html'
+    }),
+    new webpack.HotModuleReplacementPlugin()
   ]
 }
