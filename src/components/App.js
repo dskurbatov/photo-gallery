@@ -21,6 +21,9 @@ class App extends React.Component{
     this.container.addEventListener('mouseup', this.move, false)
     this.container.addEventListener('mousedown', this.lock, false)
     this.container.addEventListener('mousemove', e => e.preventDefault(), false)
+    this.container.addEventListener('touchstart', this.lock, false)
+    this.container.addEventListener('touchend', this.move, false)
+    this.container.addEventListener('touchmove', e => e.preventDefault(), false)
     document.querySelector('.next').addEventListener('click', this.onClickNext, false)
     document.querySelector('.prev').addEventListener('click', this.onClickPrev, false)
   }
