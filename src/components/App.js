@@ -6,8 +6,16 @@ class App extends React.Component{
   }
 
   render(){
-    console.log(this.props.images)
-    return <h1>Hello From React</h1>
+    return (
+      <div className="container">
+        {this.props.images.map((image, idx) => {
+          return (<figure>
+            <img src={image.url} alt={`image ${idx + 1}`} />
+            <figcaption>{image.caption}</figcaption>
+          </figure>)
+        })}
+      </div>
+    )
   }
 }
 
