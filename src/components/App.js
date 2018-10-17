@@ -7,6 +7,7 @@ class App extends React.Component{
     this.len = null
     this.idx = 0
     this.onClickNext = this.onClickNext.bind(this)
+    this.onClickPrev = this.onClickPrev.bind(this)
   }
 
   componentDidMount(){
@@ -29,6 +30,20 @@ class App extends React.Component{
       this.container.classList.add('slide')
     } else {
       this.idx = this.len - 1
+    }
+  }
+
+  onClickPrev(e){
+    if(this.container.classList.contains('slide')){
+      this.container.classList.remove('slide')
+    }
+
+    this.idx--
+    if(this.idx > -1){
+      this.container.style.setProperty('--i', this.idx)
+      this.container.classList.add('slide')
+    } else {
+      this.idx = 0
     }
   }
 
