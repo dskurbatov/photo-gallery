@@ -10,7 +10,7 @@ class Image{
 }
 
 const images = [image1, image2, image3].map((url, idx) => {
-  return new Image(url, `image ${idx}`)
+  return new Image(url, `image ${idx + 1}`)
 })
 
 export default images

@@ -1,9 +1,8 @@
 import './index.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import App from './components/App'
+import images from './images'
 
-const App = () => {
-  return <h1>This is React</h1>
-}
 
-ReactDOM.render(<App />, document.getElementById('app'))
+ReactDOM.render(<App images={images}/>, document.getElementById('app'))
