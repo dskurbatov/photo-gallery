@@ -16,13 +16,17 @@ class App extends React.Component{
 
   render(){
     return (
-      <div className="container">
-        {this.props.images.map((image, idx) => {
-          return (<figure key={idx}>
-            <img src={image.url} alt={`image ${idx + 1}`} />
-            <figcaption>{image.caption}</figcaption>
-          </figure>)
-        })}
+      <div className="wrapper">
+        <div className="container">
+          {this.props.images.map((image, idx) => {
+            return (<figure key={idx}>
+              <img src={image.url} alt={`image ${idx + 1}`} />
+              <figcaption>{image.caption}</figcaption>
+            </figure>)
+          })}
+        </div>
+        <button className="next"></button>
+        <button className="prev"></button>
       </div>
     )
   }
