@@ -18,13 +18,13 @@ body {
 }
 
 .container {
-  --n: 1;
-  width: calc(var(--n)* 100%);
+  --numOfImages: 1;
+  width: calc(var(--numOfImages)* 100%);
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: translate(calc(var(--i, 0)/var(--n)*-100% + var(--tx, 0px)));
+  transform: translate(calc(var(--idx, 0)/var(--numOfImages)*-100% + var(--dragged, 0px)));
 }
 
 .slide {
