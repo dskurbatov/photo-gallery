@@ -20,7 +20,7 @@ class App extends React.Component{
   componentDidMount(){
     this.container = document.querySelector('.container')
     this.len = this.container.children.length
-    this.size()
+    this.getSize()
 
     this.container.style.setProperty('--numOfImages', this.len)
     this.container.addEventListener('mouseup', this.move, false)
@@ -75,14 +75,17 @@ class App extends React.Component{
     if(this.startPosition || this.startPosition === 0) {
       let diff = this.getX(e) - this.startPosition
       // - 1 swipe right, 0 same, 1 swipe left
-      let direction = Math.sign(diff)
-      if((this.idx > 0 || direction < 0) && (this.idx < this.len - 1 || direction > 0)){
+      let direction = Math.sign(diff),
+      threshold = +(direction * diff / this.windowWidth).toFixed(2)
+      if((this.idx > 0 || direction < 0) && (this.idx < this.len - 1 || direction > 0) && threshold > 0.2){
         this.container.style.setProperty('--idx', this.idx -= direction)
+        threshold = 1 - threshold
       }
+      this.container.style.setProperty('--dragged', '0px');
+      this.container.style.setProperty('--threshold', threshold);
       if(!this.container.classList.contains('slide')){
         this.container.classList.add('slide')
       }
-      this.container.style.setProperty('--dragged', '0px');
       this.startPosition = null
     }
   }
