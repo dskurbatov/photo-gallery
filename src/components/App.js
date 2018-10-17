@@ -11,6 +11,7 @@ class App extends React.Component{
     this.onClickPrev = this.onClickPrev.bind(this)
     this.lock = this.lock.bind(this)
     this.move = this.move.bind(this)
+    this.getX = this.getX.bind(this)
   }
 
   componentDidMount(){
@@ -43,15 +44,19 @@ class App extends React.Component{
   }
 
   lock(e){
-    this.startPosition = e.clientX
+    this.startPosition = getX(e)
     if(this.container.classList.contains('slide')){
       this.container.classList.remove('slide')
     }
   }
 
+  getX(e){
+    return e.changedTouchs ? e.changedTouchs[0].clientX : e.clientX
+  }
+
   move(e){
     if(this.startPosition || this.startPosition === 0) {
-      let diff = e.clientX - this.startPosition
+      let diff = getX(e) - this.startPosition
       // - 1 swipe right, 0 same, 1 swipe left
       let direction = Math.sign(diff)
       if((this.idx > 0 || direction < 0) && (this.idx < this.len - 1 || direction > 0)){
