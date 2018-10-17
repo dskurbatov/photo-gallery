@@ -3,6 +3,15 @@ import React from 'react'
 class App extends React.Component{
   constructor(props){
     super(props)
+    this.container = null
+    this.len = null
+  }
+
+  componentDidMount(){
+    this.container = document.querySelector('.container')
+    this.len = this.container.children.length
+
+    this.container.style.setProperty('--n', this.len)
   }
 
   render(){

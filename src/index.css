@@ -14,11 +14,11 @@ body, html, #app, .component {
 }
 
 body {
-  background: linear-gradient(blue, lightblue)
+  overflow-x: hidden;
 }
 
 .container {
-  --n: 3;
+  --n: 1;
   width: calc(var(--n)* 100%);
   height: 100%;
   display: flex;
