@@ -8,8 +8,7 @@ class App extends React.Component{
     this.idx = 0
     this.windowWidth = null
     this.startPosition = null
-    this.onClickNext = this.onClickNext.bind(this)
-    this.onClickPrev = this.onClickPrev.bind(this)
+    this.onClick = this.onClick.bind(this)
     this.lock = this.lock.bind(this)
     this.move = this.move.bind(this)
     this.getX = this.getX.bind(this)
@@ -29,9 +28,27 @@ class App extends React.Component{
     this.container.addEventListener('touchstart', this.lock, false)
     this.container.addEventListener('touchend', this.move, false)
     this.container.addEventListener('touchmove', this.drag, false)
-    document.querySelector('.next').addEventListener('click', this.onClickNext, false)
-    document.querySelector('.prev').addEventListener('click', this.onClickPrev, false)
+    document.querySelectorAll('button').forEach(button => {
+      button.addEventListener('click', this.onClick, false)
+    })
     window.addEventListener('resize', this.getSize, false)
+  }
+
+  onClick(e){
+    //  - 1to the left and 1 to the right
+    let direction = 1
+    if(e.target.classList.contains('prev')){
+      direction = - 1
+    }
+
+    this.idx += direction
+    if(this.idx > -1 && this.idx < this.len){
+      this.container.style.setProperty('--idx', this.idx)
+      this.container.style.setProperty('--threshold', 1);
+      this.container.classList.add('slide')
+    } else {
+      this.idx -= direction
+    }
   }
 
   getSize(e){
@@ -43,20 +60,6 @@ class App extends React.Component{
 
     if(this.startPosition || this.startPosition === 0){
       this.container.style.setProperty('--dragged', `${Math.round(this.getX(e) - this.startPosition)}px`)
-    }
-  }
-
-  onClickNext(e){
-    if(this.container.classList.contains('slide')){
-      this.container.classList.remove('slide')
-    }
-
-    this.idx++
-    if(this.idx < this.len){
-      this.container.style.setProperty('--idx', this.idx)
-      this.container.classList.add('slide')
-    } else {
-      this.idx = this.len - 1
     }
   }
 
@@ -87,20 +90,6 @@ class App extends React.Component{
         this.container.classList.add('slide')
       }
       this.startPosition = null
-    }
-  }
-
-  onClickPrev(e){
-    if(this.container.classList.contains('slide')){
-      this.container.classList.remove('slide')
-    }
-
-    this.idx--
-    if(this.idx > -1){
-      this.container.style.setProperty('--idx', this.idx)
-      this.container.classList.add('slide')
-    } else {
-      this.idx = 0
     }
   }
 
