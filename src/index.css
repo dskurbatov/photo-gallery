@@ -49,6 +49,7 @@ img {
 }
 
 figcaption {
+  text-align: center;
   color: white;
   font-size: 5rem;
   position: absolute;
