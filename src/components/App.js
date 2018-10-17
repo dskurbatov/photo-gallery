@@ -5,6 +5,8 @@ class App extends React.Component{
     super(props)
     this.container = null
     this.len = null
+    this.idx = 0
+    this.onClickNext = this.onClickNext.bind(this)
   }
 
   componentDidMount(){
@@ -12,6 +14,22 @@ class App extends React.Component{
     this.len = this.container.children.length
 
     this.container.style.setProperty('--n', this.len)
+    document.querySelector('.next').addEventListener('click', this.onClickNext, false)
+    document.querySelector('.prev').addEventListener('click', this.onClickPrev, false)
+  }
+
+  onClickNext(e){
+    if(this.container.classList.contains('slide')){
+      this.container.classList.remove('slide')
+    }
+
+    this.idx++
+    if(this.idx < this.len){
+      this.container.style.setProperty('--i', this.idx)
+      this.container.classList.add('slide')
+    } else {
+      this.idx = this.len - 1
+    }
   }
 
   render(){
