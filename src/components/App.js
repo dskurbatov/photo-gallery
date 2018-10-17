@@ -6,6 +6,7 @@ class App extends React.Component{
     this.container = null
     this.len = null
     this.idx = 0
+    this.windowWidth = null
     this.startPosition = null
     this.onClickNext = this.onClickNext.bind(this)
     this.onClickPrev = this.onClickPrev.bind(this)
@@ -13,11 +14,13 @@ class App extends React.Component{
     this.move = this.move.bind(this)
     this.getX = this.getX.bind(this)
     this.drag = this.drag.bind(this)
+    this.getSize = this.getSize.bind(this)
   }
 
   componentDidMount(){
     this.container = document.querySelector('.container')
     this.len = this.container.children.length
+    this.size()
 
     this.container.style.setProperty('--numOfImages', this.len)
     this.container.addEventListener('mouseup', this.move, false)
@@ -28,6 +31,11 @@ class App extends React.Component{
     this.container.addEventListener('touchmove', this.drag, false)
     document.querySelector('.next').addEventListener('click', this.onClickNext, false)
     document.querySelector('.prev').addEventListener('click', this.onClickPrev, false)
+    window.addEventListener('resize', this.getSize, false)
+  }
+
+  getSize(e){
+    this.windowWidth = window.innerWidth
   }
 
   drag(e){
