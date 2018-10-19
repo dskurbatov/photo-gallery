@@ -13,7 +13,6 @@ module.exports = {
     path: __dirname + '/dist'
   },
   devServer: {
-    contentBase: './dist',
     //enable hot module reloading
     hot: true,
     open: true
