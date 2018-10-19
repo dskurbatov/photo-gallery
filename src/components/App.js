@@ -13,7 +13,6 @@ class App extends React.Component{
     this.move = this.move.bind(this)
     this.getX = this.getX.bind(this)
     this.drag = this.drag.bind(this)
-    this.getSize = this.getSize.bind(this)
   }
 
   componentDidMount(){
@@ -71,7 +70,7 @@ class App extends React.Component{
   }
 
   getX(e){
-    return e.changedTouchs ? e.changedTouchs[0].clientX : e.clientX
+    return e.changedTouches ? e.changedTouches[0].clientX : e.clientX
   }
 
   move(e){
