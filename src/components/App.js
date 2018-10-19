@@ -21,15 +21,6 @@ class App extends React.Component{
     this.getSize()
 
     this.container.style.setProperty('--numOfImages', this.len)
-    this.container.addEventListener('mouseup', this.move, false)
-    this.container.addEventListener('mousedown', this.lock, false)
-    this.container.addEventListener('mousemove', this.drag, false)
-    this.container.addEventListener('touchstart', this.lock, false)
-    this.container.addEventListener('touchend', this.move, false)
-    this.container.addEventListener('touchmove', this.drag, false)
-    document.querySelectorAll('button').forEach(button => {
-      button.addEventListener('click', this.onClick, false)
-    })
     window.addEventListener('resize', this.getSize, false)
   }
 
@@ -64,9 +55,10 @@ class App extends React.Component{
 
   lock(e){
     this.startPosition = this.getX(e)
-    if(this.container.classList.contains('slide')){
-      this.container.classList.remove('slide')
-    }
+    this.container.classList.toggle('slide', false)
+    // if(this.container.classList.contains('slide')){
+    //   this.container.classList.remove('slide')
+    // }
   }
 
   getX(e){
@@ -85,9 +77,10 @@ class App extends React.Component{
       }
       this.container.style.setProperty('--dragged', '0px');
       this.container.style.setProperty('--threshold', threshold);
-      if(!this.container.classList.contains('slide')){
-        this.container.classList.add('slide')
-      }
+      this.container.classList.toggle('slide', true)
+      // if(!this.container.classList.contains('slide')){
+      //   this.container.classList.add('slide')
+      // }
       this.startPosition = null
     }
   }
@@ -95,7 +88,11 @@ class App extends React.Component{
   render(){
     return (
       <div className="wrapper">
-        <div className="container">
+        <div className="container"
+            onPointerDown={this.lock}
+            onPointerMove={this.drag}
+            onPointerUp={this.move}
+        >
           {this.props.images.map((image, idx) => {
             return (<figure key={idx}>
               <img src={image.url} alt={`image ${idx + 1}`} />
@@ -103,8 +100,12 @@ class App extends React.Component{
             </figure>)
           })}
         </div>
-        <button className="next"></button>
-        <button className="prev"></button>
+        <button className="next"
+                onClick={this.onClick}
+        ></button>
+        <button className="prev"
+                onClick={this.onClick}
+        ></button>
       </div>
     )
   }
