@@ -56,9 +56,6 @@ class App extends React.Component{
   lock(e){
     this.startPosition = this.getX(e)
     this.container.classList.toggle('slide', false)
-    // if(this.container.classList.contains('slide')){
-    //   this.container.classList.remove('slide')
-    // }
   }
 
   getX(e){
@@ -78,14 +75,12 @@ class App extends React.Component{
       this.container.style.setProperty('--dragged', '0px');
       this.container.style.setProperty('--threshold', threshold);
       this.container.classList.toggle('slide', true)
-      // if(!this.container.classList.contains('slide')){
-      //   this.container.classList.add('slide')
-      // }
       this.startPosition = null
     }
   }
 
   render(){
+    const { images } = this.props
     return (
       <div className="wrapper">
         <div className="container"
@@ -93,7 +88,7 @@ class App extends React.Component{
             onPointerMove={this.drag}
             onPointerUp={this.move}
         >
-          {this.props.images.map((image, idx) => {
+          {images.map((image, idx) => {
             return (<figure key={idx}>
               <img src={image.url} alt={`image ${idx + 1}`} />
               <figcaption>{image.caption}</figcaption>
@@ -104,7 +99,7 @@ class App extends React.Component{
                 onClick={this.onClick}
         ></button>
         <button className="prev"
-                onClick={this.onClick}
+                onClick={this.onClick }
         ></button>
       </div>
     )
