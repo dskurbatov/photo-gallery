@@ -3,6 +3,9 @@ import React from 'react'
 class App extends React.Component{
   constructor(props){
     super(props)
+    this.state = {
+      count: 0
+    }
     this.container = null
     this.len = null
     this.idx = 0
@@ -16,6 +19,7 @@ class App extends React.Component{
   }
 
   componentDidMount(){
+    console.log(this.state.count)
     this.container = document.querySelector('.container')
     this.len = this.container.children.length
     this.getSize()
@@ -24,7 +28,14 @@ class App extends React.Component{
     window.addEventListener('resize', this.getSize, false)
   }
 
+  componentDidUpdate(){
+    console.log(this.state.count)
+  }
+
   onClick(e){
+    this.setState({
+      count: this.state.count + 1
+    })
     //  - 1to the left and 1 to the right
     let direction = 1
     if(e.target.classList.contains('prev')){
