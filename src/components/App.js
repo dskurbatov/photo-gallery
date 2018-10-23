@@ -4,11 +4,13 @@ class App extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      index: 0
+      index: 0,
+      dragged: 0,
+      isToggle: false,
+      threshold: 1
     }
     this.container = null
     this.len = null
-    this.idx = 0
     this.windowWidth = null
     this.startPosition = null
     this.onClick = this.onClick.bind(this)
@@ -29,8 +31,9 @@ class App extends React.Component{
 
   componentDidUpdate(){
     this.container.style.setProperty('--idx', this.state.index)
-    this.container.style.setProperty('--threshold', 1)
-    this.container.classList.add('slide')
+    this.container.style.setProperty('--threshold', this.state.threshold)
+    this.container.style.setProperty('--dragged', `${this.state.dragged}px`)
+    this.container.classList.toggle('slide', this.state.isToggle)
   }
 
   onClick(direction){
@@ -38,7 +41,9 @@ class App extends React.Component{
       let index = this.state.index + direction
       if(index > -1 && index < this.len){
         this.setState({
-          index
+          index,
+          threshold: 1,
+          isToggle: true
         })
       } 
     }
@@ -49,16 +54,27 @@ class App extends React.Component{
   }
 
   drag(e){
+    console.log(e.type)
     e.preventDefault()
-
+    console.log(this.startPosition + ' before')
     if(this.startPosition || this.startPosition === 0){
-      this.container.style.setProperty('--dragged', `${Math.round(this.getX(e) - this.startPosition)}px`)
+      let dragged = Math.round(this.getX(e) - this.startPosition)
+      console.log(dragged)
+      this.setState({
+        dragged: Math.round(this.getX(e) - this.startPosition)
+      })
+    } else {
+      console.log(this.startPosition + ' after')
     }
   }
 
   lock(e){
+    console.log('pointer-down ', e.type)
     this.startPosition = this.getX(e)
-    this.container.classList.toggle('slide', false)
+    return this.setState({
+      isToggle: false,
+      threshold: 1
+    })
   }
 
   getX(e){
@@ -66,19 +82,26 @@ class App extends React.Component{
   }
 
   move(e){
+    console.log(e.type + ' up')
     if(this.startPosition || this.startPosition === 0) {
-      let diff = this.getX(e) - this.startPosition
-      // - 1 swipe right, 0 same, 1 swipe left
-      let direction = Math.sign(diff),
-      threshold = +(direction * diff / this.windowWidth).toFixed(2)
-      if((this.idx > 0 || direction < 0) && (this.idx < this.len - 1 || direction > 0) && threshold > 0.2){
-        this.container.style.setProperty('--idx', this.idx -= direction)
+      let diff = this.getX(e) - this.startPosition,
+          direction = Math.sign(diff), // direction could be -1 moving to the right 1 moving to the left and 0 stay where you are
+          index = this.state.index,
+          threshold = +(direction * diff / this.windowWidth).toFixed(2)
+      
+      if((index > 0 || direction < 0) && (index < this.len - 1 || direction > 0) && threshold > 0.2){
+        index -= direction
         threshold = 1 - threshold
       }
-      this.container.style.setProperty('--dragged', '0px');
-      this.container.style.setProperty('--threshold', threshold);
-      this.container.classList.toggle('slide', true)
+
+      this.setState({
+        index,
+        dragged: 0,
+        threshold,
+        isToggle: true
+      })
       this.startPosition = null
+      return
     }
   }
 
