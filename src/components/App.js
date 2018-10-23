@@ -4,7 +4,7 @@ class App extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      count: 0
+      index: 0
     }
     this.container = null
     this.len = null
@@ -19,7 +19,6 @@ class App extends React.Component{
   }
 
   componentDidMount(){
-    console.log(this.state.count)
     this.container = document.querySelector('.container')
     this.len = this.container.children.length
     this.getSize()
@@ -29,26 +28,19 @@ class App extends React.Component{
   }
 
   componentDidUpdate(){
-    console.log(this.state.count)
+    this.container.style.setProperty('--idx', this.state.index)
+    this.container.style.setProperty('--threshold', 1)
+    this.container.classList.add('slide')
   }
 
-  onClick(e){
-    this.setState({
-      count: this.state.count + 1
-    })
-    //  - 1to the left and 1 to the right
-    let direction = 1
-    if(e.target.classList.contains('prev')){
-      direction = - 1
-    }
-
-    this.idx += direction
-    if(this.idx > -1 && this.idx < this.len){
-      this.container.style.setProperty('--idx', this.idx)
-      this.container.style.setProperty('--threshold', 1);
-      this.container.classList.add('slide')
-    } else {
-      this.idx -= direction
+  onClick(direction){
+    return (e) => {
+      let index = this.state.index + direction
+      if(index > -1 && index < this.len){
+        this.setState({
+          index
+        })
+      } 
     }
   }
 
@@ -107,10 +99,10 @@ class App extends React.Component{
           })}
         </div>
         <button className="next"
-                onClick={this.onClick}
+                onClick={this.onClick(1)}
         ></button>
         <button className="prev"
-                onClick={this.onClick }
+                onClick={this.onClick(-1)}
         ></button>
       </div>
     )
