@@ -1,4 +1,5 @@
 import React from 'react'
+import { Z_DEFAULT_STRATEGY } from 'zlib';
 
 class App extends React.Component{
   constructor(props){
@@ -7,12 +8,13 @@ class App extends React.Component{
       index: 0,
       dragged: 0,
       isToggle: false,
-      threshold: 1
+      threshold: 1,
+      start: null,
+      isLocked: false
     }
     this.container = null
     this.len = null
     this.windowWidth = null
-    this.startPosition = null
     this.onClick = this.onClick.bind(this)
     this.lock = this.lock.bind(this)
     this.move = this.move.bind(this)
@@ -55,21 +57,21 @@ class App extends React.Component{
 
   drag(e){
     e.preventDefault()
-    if(this.startPosition || this.startPosition === 0){
-      let dragged = Math.round(this.getX(e) - this.startPosition)
-      console.log(dragged)
+    const { isLocked, start } = this.state
+    if(isLocked){
       this.setState({
-        dragged: Math.round(this.getX(e) - this.startPosition)
+        dragged: Math.round(this.getX(e) - start)
       })
     }
     return
   }
 
   lock(e){
-    this.startPosition = this.getX(e)
     return this.setState({
       isToggle: false,
-      threshold: 1
+      threshold: 1,
+      start: this.getX(e),
+      isLocked: true
     })
   }
 
@@ -78,25 +80,26 @@ class App extends React.Component{
   }
 
   move(e){
-    if(this.startPosition || this.startPosition === 0) {
-      let diff = this.getX(e) - this.startPosition,
+    const { isLocked, start, index } = this.state
+    if(isLocked) {
+      let diff = this.getX(e) - start,
           direction = Math.sign(diff), // direction could be -1 moving to the right 1 moving to the left and 0 stay where you are
-          index = this.state.index,
+          currIndex = index,
           threshold = +(direction * diff / this.windowWidth).toFixed(2)
       
-      if((index > 0 || direction < 0) && (index < this.len - 1 || direction > 0) && threshold > 0.2){
-        index -= direction
+      if((currIndex > 0 || direction < 0) && (currIndex < this.len - 1 || direction > 0) && threshold > 0.2){
+        currIndex -= direction
         threshold = 1 - threshold
       }
 
-      this.setState({
-        index,
+      return this.setState({
+        index: currIndex,
         dragged: 0,
         threshold,
-        isToggle: true
+        isToggle: true,
+        start: null,
+        isLocked: false
       })
-      this.startPosition = null
-      return
     }
   }
 
