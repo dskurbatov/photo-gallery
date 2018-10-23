@@ -60,58 +60,39 @@ figcaption {
 }
 
 /* buttons */
+button {
+  width: 100px;
+  height: 100px;
+  background: transparent;
+  outline: none;
+  border: none;
+}
+
 .prev, .next {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%)
 }
-  
-.prev {
-  left: 0;
-}
-  
+
 .next {
   right: 0;
+  border-top: 30px solid transparent;
+  border-bottom: 30px solid transparent;
+  border-left: 30px solid white;
 }
+
+.next, .prev {
+  padding: 0 2%;
+  width: 0px; 
+  height: 0px; 
   
-  
-button {
-  margin: 20px;
-  width: 50px;
-  height: 50px;
-  background: transparent;
-  border: none;
-  outline: none;
-  border: 2px solid white;
-  border-radius: 50%
 }
-.next:before, .prev:before {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 2px solid white;
-  top: 50%;
-  left: 50%;
-}
-.next:before{
-  transform: translate(-50%, -50%) rotateZ(45deg);
-  border-left: none;
-  border-bottom: none;
-}
-.next:after, .prev:after {
-  content: '';
-  position: absolute;
-  width:25px;
-  height: 2px;
-  background:white;
+.prev {
   left: 0;
-  transform: translate(50%, -50%)
-}
-.prev:before{
-  transform: translate(-50%, -50%) rotateZ(-45deg);
-  border-right: none;
-  border-bottom: none
+  border-top: 30px solid transparent;
+  border-bottom: 30px solid transparent; 
+  
+  border-right:30px solid white;
 }
 
 @media only screen and (max-width: 700px) {
