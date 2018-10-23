@@ -54,22 +54,18 @@ class App extends React.Component{
   }
 
   drag(e){
-    console.log(e.type)
     e.preventDefault()
-    console.log(this.startPosition + ' before')
     if(this.startPosition || this.startPosition === 0){
       let dragged = Math.round(this.getX(e) - this.startPosition)
       console.log(dragged)
       this.setState({
         dragged: Math.round(this.getX(e) - this.startPosition)
       })
-    } else {
-      console.log(this.startPosition + ' after')
     }
+    return
   }
 
   lock(e){
-    console.log('pointer-down ', e.type)
     this.startPosition = this.getX(e)
     return this.setState({
       isToggle: false,
@@ -78,11 +74,10 @@ class App extends React.Component{
   }
 
   getX(e){
-    return e.changedTouches ? e.changedTouches[0].clientX : e.clientX
+    return e.clientX
   }
 
   move(e){
-    console.log(e.type + ' up')
     if(this.startPosition || this.startPosition === 0) {
       let diff = this.getX(e) - this.startPosition,
           direction = Math.sign(diff), // direction could be -1 moving to the right 1 moving to the left and 0 stay where you are
