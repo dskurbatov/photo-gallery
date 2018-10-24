@@ -1,16 +1,20 @@
 import React from 'react'
+import { Z_DEFAULT_STRATEGY } from 'zlib';
 
 class App extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      count: 0
+      index: 0,
+      dragged: 0,
+      isToggle: false,
+      threshold: 1,
+      start: null,
+      isLocked: false
     }
     this.container = null
     this.len = null
-    this.idx = 0
     this.windowWidth = null
-    this.startPosition = null
     this.onClick = this.onClick.bind(this)
     this.lock = this.lock.bind(this)
     this.move = this.move.bind(this)
@@ -19,7 +23,6 @@ class App extends React.Component{
   }
 
   componentDidMount(){
-    console.log(this.state.count)
     this.container = document.querySelector('.container')
     this.len = this.container.children.length
     this.getSize()
@@ -29,26 +32,22 @@ class App extends React.Component{
   }
 
   componentDidUpdate(){
-    console.log(this.state.count)
+    this.container.style.setProperty('--idx', this.state.index)
+    this.container.style.setProperty('--threshold', this.state.threshold)
+    this.container.style.setProperty('--dragged', `${this.state.dragged}px`)
+    this.container.classList.toggle('slide', this.state.isToggle)
   }
 
-  onClick(e){
-    this.setState({
-      count: this.state.count + 1
-    })
-    //  - 1to the left and 1 to the right
-    let direction = 1
-    if(e.target.classList.contains('prev')){
-      direction = - 1
-    }
-
-    this.idx += direction
-    if(this.idx > -1 && this.idx < this.len){
-      this.container.style.setProperty('--idx', this.idx)
-      this.container.style.setProperty('--threshold', 1);
-      this.container.classList.add('slide')
-    } else {
-      this.idx -= direction
+  onClick(direction){
+    return (e) => {
+      let index = this.state.index + direction
+      if(index > -1 && index < this.len){
+        this.setState({
+          index,
+          threshold: 1,
+          isToggle: true
+        })
+      } 
     }
   }
 
@@ -58,35 +57,49 @@ class App extends React.Component{
 
   drag(e){
     e.preventDefault()
-
-    if(this.startPosition || this.startPosition === 0){
-      this.container.style.setProperty('--dragged', `${Math.round(this.getX(e) - this.startPosition)}px`)
+    const { isLocked, start } = this.state
+    if(isLocked){
+      this.setState({
+        dragged: Math.round(this.getX(e) - start)
+      })
     }
+    return
   }
 
   lock(e){
-    this.startPosition = this.getX(e)
-    this.container.classList.toggle('slide', false)
+    return this.setState({
+      isToggle: false,
+      threshold: 1,
+      start: this.getX(e),
+      isLocked: true
+    })
   }
 
   getX(e){
-    return e.changedTouches ? e.changedTouches[0].clientX : e.clientX
+    return e.clientX
   }
 
   move(e){
-    if(this.startPosition || this.startPosition === 0) {
-      let diff = this.getX(e) - this.startPosition
-      // - 1 swipe right, 0 same, 1 swipe left
-      let direction = Math.sign(diff),
-      threshold = +(direction * diff / this.windowWidth).toFixed(2)
-      if((this.idx > 0 || direction < 0) && (this.idx < this.len - 1 || direction > 0) && threshold > 0.2){
-        this.container.style.setProperty('--idx', this.idx -= direction)
+    const { isLocked, start, index } = this.state
+    if(isLocked) {
+      let diff = this.getX(e) - start,
+          direction = Math.sign(diff), // direction could be -1 moving to the right 1 moving to the left and 0 stay where you are
+          currIndex = index,
+          threshold = +(direction * diff / this.windowWidth).toFixed(2)
+      
+      if((currIndex > 0 || direction < 0) && (currIndex < this.len - 1 || direction > 0) && threshold > 0.2){
+        currIndex -= direction
         threshold = 1 - threshold
       }
-      this.container.style.setProperty('--dragged', '0px');
-      this.container.style.setProperty('--threshold', threshold);
-      this.container.classList.toggle('slide', true)
-      this.startPosition = null
+
+      return this.setState({
+        index: currIndex,
+        dragged: 0,
+        threshold,
+        isToggle: true,
+        start: null,
+        isLocked: false
+      })
     }
   }
 
@@ -107,10 +120,10 @@ class App extends React.Component{
           })}
         </div>
         <button className="next"
-                onClick={this.onClick}
+                onClick={this.onClick(1)}
         ></button>
         <button className="prev"
-                onClick={this.onClick }
+                onClick={this.onClick(-1)}
         ></button>
       </div>
     )
